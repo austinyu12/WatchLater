@@ -4,7 +4,7 @@
     "description": "For saving Youtube videos to watch later",
     "version": "1.0",
     "action": {
-        "default_popup": "main.html",
+        "default_popup": "popup.html",
         "default_icon": "hello_extensions.png"
     },
     "permissions": ["tabs"]
