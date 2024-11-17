@@ -1,6 +1,6 @@
 async function getLastActiveTabUrl() {
     let tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    console.log("Tabs array returned: ", tabs);
+    //console.log("Tabs array returned: ", tabs);
     let [lastActiveTab] = tabs;
     if (lastActiveTab && lastActiveTab.url) {
         return lastActiveTab.url;
@@ -11,11 +11,21 @@ async function getLastActiveTabUrl() {
 
 function addToWatchLater() {
     getLastActiveTabUrl()
-    .then(url => console.log("Last active tab URL:", url))
-    .catch(error => console.error(error));
+    .catch(error => {
+        console.error(error);
+        return;
+    })
+    .then(url => {
+        //add to playlist, lets just have 1 playlist for the time being
+        const playlist = document.querySelector('.playlist');
+        const newDiv = document.createElement('div');
+        newDiv.textContent = `${url}`;
+        playlist.appendChild(newDiv);
 
-    
+        //
+    })
 }
+
 
 function main() {
     const addButton = document.getElementById('add');
