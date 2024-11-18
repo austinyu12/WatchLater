@@ -21,8 +21,6 @@ function addToWatchLater() {
         const newDiv = document.createElement('div');
         newDiv.textContent = `${url}`;
         playlist.appendChild(newDiv);
-
-        //
     })
 }
 

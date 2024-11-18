@@ -3,7 +3,7 @@ body {
     height: 500px;
 }
 
-#scroll-container {
+/* #scroll-container {
     display: flex;
     overflow-x: auto;
     gap: 10px;
@@ -15,4 +15,4 @@ body {
     width: 200px;
     height: 100px;
     display: flex;
-}
+} */
