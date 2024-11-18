@@ -2,17 +2,3 @@ body {
     width: 300px;
     height: 500px;
 }
-
-/* #scroll-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    white-space: nowrap;
-}
-
-.scroll-item {
-    flex-shrink: 0;
-    width: 200px;
-    height: 100px;
-    display: flex;
-} */

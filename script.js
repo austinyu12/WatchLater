@@ -9,6 +9,14 @@ async function getLastActiveTabUrl() {
     }
 }
 
+function createVideoObject(url) {
+    const playlist = document.querySelector('.playlist');
+    const video = document.createElement('div');
+    video.className = "video";
+    video.setAttribute('url',`${url}`);
+    playlist.appendChild(video);
+}
+
 function addToWatchLater() {
     getLastActiveTabUrl()
     .catch(error => {
@@ -16,11 +24,7 @@ function addToWatchLater() {
         return;
     })
     .then(url => {
-        //add to playlist, lets just have 1 playlist for the time being
-        const playlist = document.querySelector('.playlist');
-        const newDiv = document.createElement('div');
-        newDiv.textContent = `${url}`;
-        playlist.appendChild(newDiv);
+        createVideoObject(url);
     })
 }
 
