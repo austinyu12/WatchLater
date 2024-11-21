@@ -8,6 +8,14 @@ async function getLastActiveTabUrl() {
     }
 }
 
+/*
+Determines whether the url is a Youtube link.
+*/
+function isYoutubeUrl(url) {
+    const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v\=).+$/;
+    return pattern.test(url);
+}
+
 function createVideoObject(url) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
@@ -26,7 +34,6 @@ function savePlaylistToLocal() {
     const playlistContent = playlist.innerHTML;
     console.log(playlistContent);
     if (chrome.storage && chrome.storage.local) {
-        //chrome.storage.local.set({ "key": "value" });
         chrome.storage.local.set({ "playlistContent": playlistContent }, function () {
             if (chrome.runtime.lastError) { 
                 console.error("Failed to save playlist:", chrome.runtime.lastError.message); 
@@ -35,7 +42,7 @@ function savePlaylistToLocal() {
             }
         });
     } else {
-        console.error("Chrome storage could not be accessed");
+        console.error("Chrome storage could not be accessed.");
     }
     
 }
@@ -43,7 +50,7 @@ function savePlaylistToLocal() {
 function loadPlaylistFromLocal() {
     chrome.storage.local.get("playlistContent", function (result) {
         if (result && result.playlistContent) {
-            console.log("successfully loaded");
+            console.log("Successfully loaded playlist");
             console.log(result.playlistContent);
             const playlistContent = document.querySelector('.playlist');
             playlistContent.innerHTML = result.playlistContent;
@@ -57,8 +64,13 @@ function loadPlaylistFromLocal() {
 function addToWatchLater() {
     getLastActiveTabUrl()
     .then(url => {
-        createVideoObject(url);
-        savePlaylistToLocal();
+        if (isYoutubeUrl(url)) {
+            createVideoObject(url);
+            savePlaylistToLocal();
+        }
+        else {
+            console.error("invalid url");
+        }
     })
     .catch(error => {
         console.error(error);
@@ -68,10 +80,8 @@ function addToWatchLater() {
 function main() {
     const addButton = document.getElementById('add');
     addButton.addEventListener('click', addToWatchLater);
-    //function to load playlists on open
+    // load on open
     loadPlaylistFromLocal();
-    //create event listener to save playlists on close
-    //window.addEventListener('unload', savePlaylistToLocal);
 }
 
 document.addEventListener('DOMContentLoaded', main());
