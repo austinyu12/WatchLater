@@ -1,10 +1,19 @@
-async function getLastActiveTabUrl() {
+/*
+Gets data from Youtube video.
+*/
+async function getVideoInfo() {
+    // Gets last active tab's url
     let tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     let [lastActiveTab] = tabs;
+    let url;
     if (lastActiveTab && lastActiveTab.url) {
-        return lastActiveTab.url;
+        url = lastActiveTab.url;
     } else {
         throw new Error("No active tab found");
+    }
+
+    return {
+        url: url
     }
 }
 
@@ -62,10 +71,10 @@ function loadPlaylistFromLocal() {
 }
 
 function addToWatchLater() {
-    getLastActiveTabUrl()
-    .then(url => {
-        if (isYoutubeUrl(url)) {
-            createVideoObject(url);
+    getVideoInfo()
+    .then(info => {
+        if (isYoutubeUrl(info.url)) {
+            createVideoObject(info.url);
             savePlaylistToLocal();
         }
         else {
