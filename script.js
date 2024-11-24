@@ -13,12 +13,14 @@ async function getVideoInfo() {
     }
 
     // Gets video title
-    //console.log(lastActiveTab.id);
-    let title;
-    chrome.tabs.sendMessage(lastActiveTab.id, { action: 'getTitle' }, (response) => {
-        //title = response;
-        console.log(response.title);
-        title = response.title;
+    let title = await new Promise ((resolve, reject) => {
+        chrome.tabs.sendMessage(lastActiveTab.id, { action: 'getTitle' }, (response) => {
+            if (response && response.title) {
+                resolve(response.title);
+            } else {
+                reject('No title found');
+            }
+        });
     });
 
     return {
