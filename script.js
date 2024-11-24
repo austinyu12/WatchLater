@@ -1,10 +1,31 @@
-async function getLastActiveTabUrl() {
+/*
+Gets data from Youtube video.
+*/
+async function getVideoInfo() {
+    // Gets last active tab's url
     let tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     let [lastActiveTab] = tabs;
+    let url;
     if (lastActiveTab && lastActiveTab.url) {
-        return lastActiveTab.url;
+        url = lastActiveTab.url;
     } else {
         throw new Error("No active tab found");
+    }
+
+    // Gets video title
+    let title = await new Promise ((resolve, reject) => {
+        chrome.tabs.sendMessage(lastActiveTab.id, { action: 'getTitle' }, (response) => {
+            if (response && response.title) {
+                resolve(response.title);
+            } else {
+                reject('No title found');
+            }
+        });
+    });
+
+    return {
+        url: url,
+        title: title
     }
 }
 
@@ -16,11 +37,12 @@ function isYoutubeUrl(url) {
     return pattern.test(url);
 }
 
-function createVideoObject(url) {
+function createVideoObject(url, title) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
     video.className = "video";
     video.setAttribute('url',`${url}`);
+    video.setAttribute('title',`${title}`);
     playlist.appendChild(video);
 }
 
@@ -62,10 +84,10 @@ function loadPlaylistFromLocal() {
 }
 
 function addToWatchLater() {
-    getLastActiveTabUrl()
-    .then(url => {
-        if (isYoutubeUrl(url)) {
-            createVideoObject(url);
+    getVideoInfo()
+    .then(info => {
+        if (isYoutubeUrl(info.url)) {
+            createVideoObject(info.url, info.title);
             savePlaylistToLocal();
         }
         else {
