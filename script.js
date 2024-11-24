@@ -12,8 +12,13 @@ async function getVideoInfo() {
         throw new Error("No active tab found");
     }
 
+    // Gets video title
+    //console.log(lastActiveTab.id);
+    let title = "test title";
+
     return {
-        url: url
+        url: url,
+        title: title
     }
 }
 
@@ -25,11 +30,12 @@ function isYoutubeUrl(url) {
     return pattern.test(url);
 }
 
-function createVideoObject(url) {
+function createVideoObject(url, title) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
     video.className = "video";
     video.setAttribute('url',`${url}`);
+    video.setAttribute('title',`${title}`);
     playlist.appendChild(video);
 }
 
@@ -74,7 +80,7 @@ function addToWatchLater() {
     getVideoInfo()
     .then(info => {
         if (isYoutubeUrl(info.url)) {
-            createVideoObject(info.url);
+            createVideoObject(info.url, info.title);
             savePlaylistToLocal();
         }
         else {
