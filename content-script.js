@@ -1,5 +1,7 @@
 function getTitle() {
-    return 'test';
+    let title = document.querySelector('yt-formatted-string.style-scope.ytd-watch-metadata');
+    console.log(title.textContent);
+    return title.textContent;
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
