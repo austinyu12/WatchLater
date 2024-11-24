@@ -17,6 +17,8 @@ async function getVideoInfo() {
     let title;
     chrome.tabs.sendMessage(lastActiveTab.id, { action: 'getTitle' }, (response) => {
         //title = response;
+        console.log(response.title);
+        title = response.title;
     });
 
     return {
