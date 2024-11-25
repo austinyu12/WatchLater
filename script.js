@@ -70,8 +70,13 @@ function savePlaylistToLocal() {
         });
     } else {
         console.error("Chrome storage could not be accessed.");
-    }
-    
+    }  
+}
+
+function clearPlaylist() {
+    const playlist = document.querySelector('.playlist');
+    playlist.innerHTML = "";
+    savePlaylistToLocal();
 }
 
 function loadPlaylistFromLocal() {
@@ -107,6 +112,8 @@ function addToWatchLater() {
 function main() {
     const addButton = document.getElementById('add');
     addButton.addEventListener('click', addToWatchLater);
+    const clearAllButton = document.getElementById('clear-all');
+    clearAllButton.addEventListener('click', clearPlaylist);
     // load on open
     loadPlaylistFromLocal();
 }
