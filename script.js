@@ -41,6 +41,15 @@ function isYoutubeUrl(url) {
     return pattern.test(url);
 }
 
+function notDuplicate(url) {
+    const playlist = document.querySelector('.playlist');
+    for (const video of playlist.children) {
+        console.log(video);
+
+    }
+    return true;
+}
+
 function createVideoObject(url, title, timestamp) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
@@ -91,7 +100,7 @@ function loadPlaylistFromLocal() {
 function addToWatchLater() {
     getVideoInfo()
     .then(info => {
-        if (isYoutubeUrl(info.url)) {
+        if (isYoutubeUrl(info.url) && notDuplicate(info.url)) {
             createVideoObject(info.url, info.title, info.timestamp);
             savePlaylistToLocal();
         }
