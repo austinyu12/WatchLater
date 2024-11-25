@@ -60,7 +60,7 @@ function createVideoObject(url, title, timestamp) {
     video.className = "video";
     video.setAttribute('href',`${url}`);
     video.setAttribute('title',`${title}`);
-    video.setAttribute('timestamp', `${timestamp}`);
+    video.setAttribute('data-timestamp', `${timestamp}`);
     playlist.appendChild(video);
     return video;
 }
