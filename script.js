@@ -23,7 +23,7 @@ async function getVideoInfo() {
         });
     });
 
-    // Get's time
+    // Gets time
     const time = Date.now();
 
     return {
