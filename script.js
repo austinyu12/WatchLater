@@ -34,6 +34,19 @@ async function getVideoInfo() {
 }
 
 /*
+Input is the video div itself. Will fill out the contents of the video div.
+*/
+function populateVideoObject(videoDiv) {
+    const url = videoDiv.getAttribute('href');
+    
+    const visibleTitle = document.createElement('a');
+    visibleTitle.innerText = videoDiv.title;
+    visibleTitle.setAttribute('href', url);
+    visibleTitle.setAttribute('target', '_blank');
+    videoDiv.appendChild(visibleTitle);
+}
+
+/*
 Determines whether the url is a Youtube link.
 */
 function isYoutubeUrl(url) {
@@ -45,10 +58,11 @@ function createVideoObject(url, title, timestamp) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
     video.className = "video";
-    video.setAttribute('url',`${url}`);
+    video.setAttribute('href',`${url}`);
     video.setAttribute('title',`${title}`);
     video.setAttribute('timestamp', `${timestamp}`);
     playlist.appendChild(video);
+    return video;
 }
 
 /*
@@ -97,7 +111,8 @@ function addToWatchLater() {
     getVideoInfo()
     .then(info => {
         if (isYoutubeUrl(info.url)) {
-            createVideoObject(info.url, info.title, info.timestamp);
+            const video = createVideoObject(info.url, info.title, info.timestamp);
+            populateVideoObject(video);
             savePlaylistToLocal();
         }
         else {
