@@ -34,16 +34,31 @@ async function getVideoInfo() {
 }
 
 /*
+Removes video by timestamp since it's unique.
+*/
+function removeVideo(videoDiv, time) {
+    const parent = videoDiv.parentElement;
+    const child = parent.querySelector(`[data-timestamp="${time}"]`)
+    parent.removeChild(child);
+}
+
+/*
 Input is the video div itself. Will fill out the contents of the video div.
 */
 function populateVideoObject(videoDiv) {
     const url = videoDiv.getAttribute('href');
-    
+
     const visibleTitle = document.createElement('a');
     visibleTitle.innerText = videoDiv.title;
     visibleTitle.setAttribute('href', url);
     visibleTitle.setAttribute('target', '_blank');
     videoDiv.appendChild(visibleTitle);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.setAttribute('class', 'removeVideo');
+    deleteButton.setAttribute('type', 'button');
+    deleteButton.addEventListener('click', () => removeVideo(videoDiv, videoDiv.getAttribute('data-timestamp')));
+    videoDiv.appendChild(deleteButton);
 }
 
 /*
@@ -60,7 +75,7 @@ function createVideoObject(url, title, timestamp) {
     video.className = "video";
     video.setAttribute('href',`${url}`);
     video.setAttribute('title',`${title}`);
-    video.setAttribute('timestamp', `${timestamp}`);
+    video.setAttribute('data-timestamp', `${timestamp}`);
     playlist.appendChild(video);
     return video;
 }
