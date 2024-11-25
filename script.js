@@ -23,9 +23,13 @@ async function getVideoInfo() {
         });
     });
 
+    // Get's time
+    const time = Date.now();
+
     return {
         url: url,
-        title: title
+        title: title,
+        timestamp: time
     }
 }
 
@@ -37,12 +41,13 @@ function isYoutubeUrl(url) {
     return pattern.test(url);
 }
 
-function createVideoObject(url, title) {
+function createVideoObject(url, title, timestamp) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
     video.className = "video";
     video.setAttribute('url',`${url}`);
     video.setAttribute('title',`${title}`);
+    video.setAttribute('timestamp', `${timestamp}`);
     playlist.appendChild(video);
 }
 
@@ -87,7 +92,7 @@ function addToWatchLater() {
     getVideoInfo()
     .then(info => {
         if (isYoutubeUrl(info.url)) {
-            createVideoObject(info.url, info.title);
+            createVideoObject(info.url, info.title, info.timestamp);
             savePlaylistToLocal();
         }
         else {
