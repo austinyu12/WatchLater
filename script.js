@@ -23,7 +23,7 @@ async function getVideoInfo() {
         });
     });
 
-    // Get's time
+    // Gets time
     const time = Date.now();
 
     return {
@@ -31,6 +31,34 @@ async function getVideoInfo() {
         title: title,
         timestamp: time
     }
+}
+
+/*
+Removes video by timestamp since it's unique.
+*/
+function removeVideo(videoDiv, time) {
+    const parent = videoDiv.parentElement;
+    const child = parent.querySelector(`[data-timestamp="${time}"]`)
+    parent.removeChild(child);
+}
+
+/*
+Input is the video div itself. Will fill out the contents of the video div.
+*/
+function populateVideoObject(videoDiv) {
+    const url = videoDiv.getAttribute('href');
+
+    const visibleTitle = document.createElement('a');
+    visibleTitle.innerText = videoDiv.title;
+    visibleTitle.setAttribute('href', url);
+    visibleTitle.setAttribute('target', '_blank');
+    videoDiv.appendChild(visibleTitle);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.setAttribute('class', 'removeVideo');
+    deleteButton.setAttribute('type', 'button');
+    deleteButton.addEventListener('click', () => removeVideo(videoDiv, videoDiv.getAttribute('data-timestamp')));
+    videoDiv.appendChild(deleteButton);
 }
 
 /*
@@ -54,10 +82,11 @@ function createVideoObject(url, title, timestamp) {
     const playlist = document.querySelector('.playlist');
     const video = document.createElement('div');
     video.className = "video";
-    video.setAttribute('url',`${url}`);
+    video.setAttribute('href',`${url}`);
     video.setAttribute('title',`${title}`);
-    video.setAttribute('timestamp', `${timestamp}`);
+    video.setAttribute('data-timestamp', `${timestamp}`);
     playlist.appendChild(video);
+    return video;
 }
 
 /*
@@ -68,7 +97,6 @@ when the key:value pair is saved, so if no error messages return, it's a success
 function savePlaylistToLocal() {
     const playlist = document.querySelector('.playlist');
     const playlistContent = playlist.innerHTML;
-    console.log(playlistContent);
     if (chrome.storage && chrome.storage.local) {
         chrome.storage.local.set({ "playlistContent": playlistContent }, function () {
             if (chrome.runtime.lastError) { 
@@ -79,20 +107,24 @@ function savePlaylistToLocal() {
         });
     } else {
         console.error("Chrome storage could not be accessed.");
-    }
-    
+    }  
+}
+
+function clearPlaylist() {
+    const playlist = document.querySelector('.playlist');
+    playlist.innerHTML = "";
+    savePlaylistToLocal();
 }
 
 function loadPlaylistFromLocal() {
     chrome.storage.local.get("playlistContent", function (result) {
         if (result && result.playlistContent) {
             console.log("Successfully loaded playlist");
-            console.log(result.playlistContent);
             const playlistContent = document.querySelector('.playlist');
             playlistContent.innerHTML = result.playlistContent;
         }
         else {
-            console.error("result or result.playlistContent not found");
+            console.log("Playlist empty or not found");
         }
     });
 }
@@ -101,7 +133,8 @@ function addToWatchLater() {
     getVideoInfo()
     .then(info => {
         if (isYoutubeUrl(info.url) && notDuplicate(info.url)) {
-            createVideoObject(info.url, info.title, info.timestamp);
+            const video = createVideoObject(info.url, info.title, info.timestamp);
+            populateVideoObject(video);
             savePlaylistToLocal();
         }
         else {
@@ -116,6 +149,8 @@ function addToWatchLater() {
 function main() {
     const addButton = document.getElementById('add');
     addButton.addEventListener('click', addToWatchLater);
+    const clearAllButton = document.getElementById('clear-all');
+    clearAllButton.addEventListener('click', clearPlaylist);
     // load on open
     loadPlaylistFromLocal();
 }
