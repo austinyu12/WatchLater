@@ -115,7 +115,7 @@ function loadPlaylistFromLocal() {
             playlistContent.innerHTML = result.playlistContent;
         }
         else {
-            console.error("Playlist empty or not found");
+            console.log("Playlist empty or not found");
         }
     });
 }
