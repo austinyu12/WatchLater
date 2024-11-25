@@ -88,7 +88,6 @@ when the key:value pair is saved, so if no error messages return, it's a success
 function savePlaylistToLocal() {
     const playlist = document.querySelector('.playlist');
     const playlistContent = playlist.innerHTML;
-    console.log(playlistContent);
     if (chrome.storage && chrome.storage.local) {
         chrome.storage.local.set({ "playlistContent": playlistContent }, function () {
             if (chrome.runtime.lastError) { 
@@ -112,7 +111,6 @@ function loadPlaylistFromLocal() {
     chrome.storage.local.get("playlistContent", function (result) {
         if (result && result.playlistContent) {
             console.log("Successfully loaded playlist");
-            console.log(result.playlistContent);
             const playlistContent = document.querySelector('.playlist');
             playlistContent.innerHTML = result.playlistContent;
         }
