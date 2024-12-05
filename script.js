@@ -52,6 +52,7 @@ function populateVideoObject(videoDiv) {
     visibleTitle.innerText = videoDiv.title;
     visibleTitle.setAttribute('href', url);
     visibleTitle.setAttribute('target', '_blank');
+    visibleTitle.classList.add('video-title');
     videoDiv.appendChild(visibleTitle);
 
     const deleteButton = document.createElement('button');

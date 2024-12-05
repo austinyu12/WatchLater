@@ -2,3 +2,29 @@ body {
     width: 300px;
     height: 500px;
 }
+
+.button-container {
+    display: flex;
+    gap: 4px;
+}
+
+.fill {
+    flex: 1;
+}
+
+.playlist {
+    padding-top: 4px;
+}
+
+.video {
+    display: flex;
+    width: 100%;
+    padding: 2px;
+}
+
+.video-title {
+    flex: 1 1 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
